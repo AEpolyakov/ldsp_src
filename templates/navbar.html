@@ -1,0 +1,70 @@
+{% load static %}
+{% url 'manager:home' as path_home %}
+{% url 'manager:record' as path_record %}
+{% url 'manager:timesheet' as path_timesheet %}
+{% url 'manager:time_track' as path_time_track %}
+{% url 'manager:record_base' as path_record_base %}
+
+{% url 'manager:my_profile' as path_profile %}
+{% url 'logout' as path_logout %}
+
+<div class="navbar">
+  <ul>
+    <li><a class="navbar-brand" href=""><img src="{% static 'favicon-32x32.png' %}" class="logo-sm"></a></li>
+    <li><a class="nav-link {% if request.path == path_record %}active{% endif %}" href="{{path_record}}">Заявки</a></li>
+    <li><a class="nav-link {% if request.path == path_timesheet %}active{% endif %}" href="{{path_timesheet}}">График</a></li>
+    <li><a class="nav-link {% if request.path == path_time_track %}active{% endif %}" href="{{path_time_track}}">Магический квадрат</a></li>
+    <li><a class="nav-link {% if request.path == path_record_base %}active{% endif %}" href="{{path_record_base}}">База записей</a></li>
+
+    {% if request.user.is_authenticated %}
+      <li style="float:right"><a class="nav-link" href="{{path_logout}}">Logout</a></li>
+      <li style="float:right"><a class="nav-link" href="{{path_profile}}">{{request.user}}</a></li>
+    {% endif %}
+  </ul>
+</div>
+
+<style>
+  .navbar{
+    z-index: 10000;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+  }
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+
+  li {
+    float: left;
+  }
+
+  li a {
+    display: block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    color: #f8f8f8;
+  }
+
+  a:hover{
+    color: #ff8000;
+
+  }
+
+
+  li a:hover:not(.active) {
+    background-color: #111;
+  }
+
+  .active {
+    background-color: #666666;
+  }
+</style>

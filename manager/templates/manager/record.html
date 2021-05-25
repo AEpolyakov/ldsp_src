@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+    Заявки!!!
+{% endblock title %}
+
+{% block scripts %}
+    <script src="{% static 'manager/record.js' %}"></script>
+{% endblock scripts %}
+
+{% block content %}
+    <div class="record-content card">
+        <form action="" class="form-record" method="post">
+            {% csrf_token %}
+            <select name="department_selected">
+            {% for dep in departments %}
+                <option>{{dep.name}}</option>
+            {% endfor %}
+            </select>
+            <a id="id_cur_dep" style="display: none;">{{ department }}</a>
+            <hr>
+            <div>
+                <select name="person">
+                    {% for person in persons %}
+                        <option>{{person.name}}; {{person.personnel_number}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>{{form.type}}</div>
+            <hr>
+            <div>
+                {{form.date_from}}<a id="button_date_from_today">&nbsp;today</a><br>
+                {{form.time_from}}
+            </div>
+            <hr>
+            <div>
+                {{form.date_to}}<br>
+                {{form.time_to}}
+            </div>
+            {% if confirmed %}
+                <div class="" role="alert">{{alert}}</div>
+            {% endif %}
+            <button type="submit" id="make-record" class="btn btn-primary mt-3">Сделать!</button>
+        </form>
+    </div>
+    <style>
+        .record-content{
+            margin-left: auto;
+            margin-right: auto;
+            width: 250px;
+        }
+        .disabled{
+            color: #999;
+        }
+
+        .card {
+          padding: 10px;
+          background-color: #f8f8f8;
+          box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+          transition: 0.3s;
+        }
+
+        .card:hover {
+          box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+
+    </style>
+
+{% endblock content %}

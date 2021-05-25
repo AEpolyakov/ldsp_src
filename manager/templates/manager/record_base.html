@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+    База записей
+{% endblock title %}
+
+{% block scripts %}
+<!--    <script src="{% static 'manager/record.js' %}"></script>-->
+{% endblock scripts %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="base-content card">
+            <table>
+                <tr class="table-header">
+                    <td><button class="btn-sort" type="submit" name="sort" value="by_id">ID</button></td>
+                    <td><button class="btn-sort" type="submit" name="sort" value="by_type">Тип</button></td>
+                    <td><button class="btn-sort" type="submit" name="sort" value="by_name">Фамилия И.О.</button></td>
+                    <td><button class="btn-sort" type="submit" name="sort" value="by_date_from">Дата 1</button></td>
+                    <td><button class="btn-sort" type="submit" name="sort" value="by_date_to">Дата 2</button></td>
+                    <td>Удалить</td>
+                </tr>
+                {% for record in records %}
+                    <tr>
+                        <td>{{record.id}}</td>
+                        <td>{{record.type}}</td>
+                        <td>{{record.person.name}}</td>
+                        <td>{{record.date_from}}</td>
+                        <td>{{record.date_to}}</td>
+<!--                        <td class="td-killer"><button class="killer" type="submit" name="kill" value="{{record.id}}">X</button></td>-->
+                        <td class="td-killer"><button name="kill" value="{{record.id}}"><img class="image-close" src="{% static 'close.png' %}"></button></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </form>
+    <style>
+        .image-close{
+            height: 25px;
+            width: 25px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .btn-sort{
+            border:0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            background-color: #eee;
+        }
+        .btn-sort:hover{
+            background-color: #ddd;
+        }
+        .killer{
+            border:0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+
+        table, td {
+            border: 2px solid black;
+            border-collapse: collapse;
+            padding: 3px;
+        }
+        .base-content{
+            margin-left: auto;
+            margin-right: auto;
+            width: 700px;
+        }
+        .disabled{
+            color: #999;
+        }
+
+        .card {
+          padding: 10px;
+          background-color: #f8f8f8;
+          box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+          transition: 0.3s;
+        }
+
+        .card:hover {
+          box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        }
+
+    </style>
+
+{% endblock content %}

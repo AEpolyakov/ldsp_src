@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  <title>Импорт</title>
+</head>
+<body>
+  <form class="import-title" method="post">
+      {% csrf_token %}
+      Импорт из старой базы<br>
+      {% if ok %}
+        {{ok}}
+      {% endif %}
+      <button class="btn btn-primary" type="submit" name="IMPORT_PERSONS">IMPORT PERSONS</button>
+      <button class="btn btn-primary" type="submit" name="IMPORT_RECORDS">IMPORT RECORDS</button>
+  </form>
+
+</body>
+<style>
+
+</style>
+</html>
