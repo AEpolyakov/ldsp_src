@@ -123,6 +123,9 @@ def record_base_view(request):
             print(f'kill: {kill_id}')
             Record.objects.get(id=kill_id).delete()
 
+        if 'filter' in request.POST:
+            print(f'!!!filter{request.POST["filter"]}')
+
 
     else:
         print(f'GET{request.GET}')
