@@ -51,7 +51,6 @@ def record_view(request):
                            'department': current_department,
                            'departments': Department.objects.all(),
                            'persons': Person.objects.filter(department=current_department),
-
                            }
                 return render(request, 'manager/record.html', context=context)
     else:
@@ -129,7 +128,7 @@ def record_base_view(request):
         print(f'GET{request.GET}')
 
     context = {
-        'records': Record.objects.all()
+        'records': Record.objects.all().order_by('id').reverse()
     }
     return render(request, 'manager/record_base.html', context)
 

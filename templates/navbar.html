@@ -19,6 +19,7 @@
     {% if request.user.is_authenticated %}
       <li style="float:right"><a class="nav-link" href="{{path_logout}}">Logout</a></li>
       <li style="float:right"><a class="nav-link" href="{{path_profile}}">{{request.user}}</a></li>
+      <li style="float:right"><img src="{{request.user.profile.logo.url}}" style="max-width: 35px; margin-top: 3px;"></li>
     {% endif %}
   </ul>
 </div>

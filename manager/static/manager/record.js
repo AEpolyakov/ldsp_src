@@ -1,17 +1,24 @@
 window.onload = function() {
-    const person = document.getElementById('id_person')
     const record_type = document.getElementById('id_type')
     const date_from = document.getElementById('id_date_from')
     const date_to = document.getElementById('id_date_to')
     const time_from = document.getElementById('id_time_from')
     const time_to = document.getElementById('id_time_to')
+    const button_date_from_today = document.getElementById('button_date_from_today')
+    const current_department = document.getElementById('id_cur_dep')
+    const department_selected = document.getElementById('id_dep_sel')
+
+
+    console.log(current_department.value)
+    console.log(department_selected.value)
+    department_selected.value = current_department.value
+
+
     time_from.setAttribute('class', 'disabled')
     time_to.setAttribute('class', 'disabled')
     date_to.setAttribute('class', 'disabled')
 
-    const button_date_from_today = document.getElementById('button_date_from_today')
-    console.log(button_date_from_today)
-
+    date_from.value = today()
     button_date_from_today.addEventListener('click', (event)=>{
         date_from.value = today()
     })

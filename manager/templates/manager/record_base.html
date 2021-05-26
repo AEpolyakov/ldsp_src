@@ -11,8 +11,27 @@
 {% endblock scripts %}
 
 {% block content %}
-    <form method="post">
+    <form method="post" name="main-form">
         {% csrf_token %}
+        <div class="btn-group">
+
+            <select size="5">
+                <option name="select-type" value="0">Админы</option>
+                <option name="select-type" value="1">Отгулы</option>
+                <option name="select-type" value="2">Больничные</option>
+                <option name="select-type" value="3">Отпуска</option>
+                <option name="select-type" value="4">Командировки</option>
+            </select>
+
+            <button type="submit" name="filter">Фильтр</button>
+
+<!--            <button type="submit" name="select-type" value="admin">Админы</button>-->
+<!--            <button type="submit" name="select-type" value="otgul">Отгулы</button>-->
+<!--            <button type="submit" name="select-type" value="hosp">Больничные</button>-->
+<!--            <button type="submit" name="select-type" value="otpusk">Отпуска</button>-->
+<!--            <button type="submit" name="select-type" value="komand">Командировки</button>-->
+        </div>
+
         <div class="base-content card">
             <table id="records-table">
                 <tr class="table-header">
@@ -31,13 +50,27 @@
                         <td>{{record.date_from}}</td>
                         <td>{{record.date_to}}</td>
 <!--                        <td class="td-killer"><button class="killer" type="submit" name="kill" value="{{record.id}}">X</button></td>-->
-                        <td class="td-killer"><button name="kill" value="{{record.id}}"><img class="image-close" src="{% static 'close.png' %}"></button></td>
+                        <td class="td-killer"><button class="killer" name="kill" value="{{record.id}}"><img class="image-close" src="{% static 'close.png' %}"></button></td>
                     </tr>
                 {% endfor %}
             </table>
         </div>
     </form>
     <style>
+        .btn-group{
+            display: inline;
+            width: 200px;
+            position: fixed;
+        }
+        .btn-group button{
+            padding: 3px;
+            width: 150px;
+            float: bottom;
+        }
+
+
+
+
         .image-close{
             height: 25px;
             width: 25px;
@@ -69,7 +102,7 @@
         .base-content{
             margin-left: auto;
             margin-right: auto;
-            width: 700px;
+            width: 750px;
         }
         .disabled{
             color: #999;

@@ -14,12 +14,12 @@
     <div class="record-content card">
         <form action="" class="form-record" method="post">
             {% csrf_token %}
-            <select name="department_selected">
+            <select name="department_selected" id="id_dep_sel">
             {% for dep in departments %}
                 <option>{{dep.name}}</option>
             {% endfor %}
             </select>
-            <a id="id_cur_dep" style="display: none;">{{ department }}</a>
+            <button id="id_cur_dep" style="display: none;" value="{{ department }}"></button>
             <hr>
             <div>
                 <select name="person">
