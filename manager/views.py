@@ -118,22 +118,29 @@ def time_track_view(request):
 def record_base_view(request):
     if request.method == "POST":
         print(request.POST)
+        context = {}
         if 'kill' in request.POST:
             kill_id = request.POST["kill"]
             print(f'kill: {kill_id}')
             Record.objects.get(id=kill_id).delete()
-
-        if 'filter' in request.POST:
+        elif 'filter' in request.POST:
+            selected_type = TYPE_CHOICES[int(request.POST["selector"])][1]
             print(f'!!!filter{request.POST["filter"]}')
+            context = {
+                'records': Record.objects.filter(type=selected_type).order_by('id').reverse()
+            }
+        if context is None:
+            context = {
+                'records': Record.objects.all().order_by('id').reverse()
+            }
 
-
+        return render(request, 'manager/record_base.html', context)
     else:
         print(f'GET{request.GET}')
-
-    context = {
-        'records': Record.objects.all().order_by('id').reverse()
-    }
-    return render(request, 'manager/record_base.html', context)
+        context = {
+            'records': Record.objects.all().order_by('id').reverse()
+        }
+        return render(request, 'manager/record_base.html', context)
 
 
 @login_required
