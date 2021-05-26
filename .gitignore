@@ -1,0 +1,8 @@
+*sqlite3
+*__init__*
+*__pycache__*
+*manager/import_from_old.py
+*migrations*
+manage.py
+*settings.py
+

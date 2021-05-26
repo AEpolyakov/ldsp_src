@@ -7,14 +7,14 @@
 {% endblock title %}
 
 {% block scripts %}
-<!--    <script src="{% static 'manager/record.js' %}"></script>-->
+    <script src="{% static 'manager/record_base.js' %}"></script>
 {% endblock scripts %}
 
 {% block content %}
     <form method="post">
         {% csrf_token %}
         <div class="base-content card">
-            <table>
+            <table id="records-table">
                 <tr class="table-header">
                     <td><button class="btn-sort" type="submit" name="sort" value="by_id">ID</button></td>
                     <td><button class="btn-sort" type="submit" name="sort" value="by_type">Тип</button></td>
