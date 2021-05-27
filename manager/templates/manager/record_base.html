@@ -13,14 +13,20 @@
 {% block content %}
     <form method="post" name="main-form">
         {% csrf_token %}
-        <div class="btn-group">
-            <select size="5" name="selector" >
-                <option name="select-type" value="0">Админы</option>
-                <option name="select-type" value="1">Отгулы</option>
-                <option name="select-type" value="2">Больничные</option>
-                <option name="select-type" value="3">Отпуска</option>
-                <option name="select-type" value="4">Командировки</option>
-            </select>
+        <div class="filters card">
+            <p><input type="month" name="date" value="{{date}}" id="id_date"><a id="date_clear">X</a></p>
+            <p>{{form.type}}</p>
+            <p>{{form.name}}</p>
+            <p><input type="number" max="99999" min="00000" name="per_num" value="{{per_num}}" id="id_per_num"></p>
+
+            <p>
+                <select size="{{departments|length}}" name="department-selector">
+                    {% for department in departments %}
+                        <option value="{{department.id}}">{{department.name}}</option>
+                    {% endfor %}
+                </select>
+            </p>
+
             <button type="submit" name="filter">Фильтр</button>
         </div>
 
@@ -30,6 +36,7 @@
                     <td><button class="btn-sort" type="submit" name="sort" value="by_id">ID</button></td>
                     <td><button class="btn-sort" type="submit" name="sort" value="by_type">Тип</button></td>
                     <td><button class="btn-sort" type="submit" name="sort" value="by_name">Фамилия И.О.</button></td>
+                    <td><button class="btn-sort" type="submit" name="sort" value="by_name">Табельный №</button></td>
                     <td><button class="btn-sort" type="submit" name="sort" value="by_date_from">Дата 1</button></td>
                     <td><button class="btn-sort" type="submit" name="sort" value="by_date_to">Дата 2</button></td>
                     <td>Удалить</td>
@@ -39,6 +46,7 @@
                         <td>{{record.id}}</td>
                         <td>{{record.type}}</td>
                         <td>{{record.person.name}}</td>
+                        <td>{{record.person.personnel_number}}</td>
                         <td>{{record.date_from}}</td>
                         <td>{{record.date_to}}</td>
 <!--                        <td class="td-killer"><button class="killer" type="submit" name="kill" value="{{record.id}}">X</button></td>-->
@@ -53,19 +61,20 @@
         </div>
     </form>
     <style>
-        .btn-group{
+        #id_name, #id_per_num, #id_date{
+            width: 180px;
+        }
+
+        .filters{
             display: inline;
-            width: 200px;
+            width: 220px;
             position: fixed;
         }
-        .btn-group button{
+        .filters button{
             padding: 3px;
             width: 150px;
             float: bottom;
         }
-
-
-
 
         .image-close{
             height: 25px;
@@ -98,7 +107,7 @@
         .base-content{
             margin-left: auto;
             margin-right: auto;
-            width: 750px;
+            width: 900px;
         }
         .disabled{
             color: #999;

@@ -27,7 +27,6 @@ class TimesheetForm(forms.Form):
 
 
 class BaseOfRecords(forms.Form):
-    date = forms.DateField()
-    name = forms.CharField(max_length=64)
-    type = forms.CharField(max_length=16)
-
+    name = forms.CharField(max_length=64, required=False)
+    type = forms.ChoiceField(choices=TYPE_CHOICES, required=False)
+    department = forms.CharField(max_length=64, required=False)

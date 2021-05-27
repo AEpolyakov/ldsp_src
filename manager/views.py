@@ -1,8 +1,12 @@
+import datetime
+import calendar
+
+
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
 from .models import Department, Record, Person, Profile
-from .forms import ProfileForm, RecordForm, TimesheetForm
+from .forms import ProfileForm, RecordForm, TimesheetForm, BaseOfRecords
 from xhtml2pdf import pisa
 from .utils import Report, Timesheet, TimeTrack
 from django.contrib.auth.decorators import login_required
@@ -116,31 +120,54 @@ def time_track_view(request):
 
 @login_required
 def record_base_view(request):
+
+    records = Record.objects.all()
+
     if request.method == "POST":
         print(request.POST)
-        context = {}
+        print(f'date = {request.POST["date"]}')
+        form = BaseOfRecords(request.POST)
+        date = request.POST['date']
+
         if 'kill' in request.POST:
             kill_id = request.POST["kill"]
-            print(f'kill: {kill_id}')
             Record.objects.get(id=kill_id).delete()
-        elif 'filter' in request.POST:
-            selected_type = TYPE_CHOICES[int(request.POST["selector"])][1]
-            print(f'!!!filter{request.POST["filter"]}')
-            context = {
-                'records': Record.objects.filter(type=selected_type).order_by('id').reverse()
-            }
-        if context is None:
-            context = {
-                'records': Record.objects.all().order_by('id').reverse()
-            }
 
-        return render(request, 'manager/record_base.html', context)
+        if request.POST['type'] is not TYPE_CHOICES[0][0]:
+            records = records.filter(type=TYPE_CHOICES[int(request.POST["type"])][1])
+
+        if request.POST['name'] is not '':
+            records = records.filter(person__name__contains=request.POST['name'])
+
+        if request.POST['date'] is not '':
+            this_month = datetime.datetime.strptime(request.POST['date'], '%Y-%m')
+            next_month = datetime.datetime(year=this_month.year, month=this_month.month,
+                                           day=calendar.monthrange(this_month.year, this_month.month)[1])
+            date_range = [this_month, next_month]
+            print(f'date_range = {date_range}')
+            records = records.filter(date_from__range=date_range)
+
+        if request.POST['per_num'] not in ['', None]:
+            per_num = request.POST['per_num']
+            records = records.filter(person__personnel_number__contains=per_num)
+        else:
+            per_num = ''
     else:
         print(f'GET{request.GET}')
-        context = {
-            'records': Record.objects.all().order_by('id').reverse()
-        }
-        return render(request, 'manager/record_base.html', context)
+        date = ''
+        per_num = ''
+        form = BaseOfRecords()
+
+    context = {
+        'departments': Department.objects.all(),
+        'form': form,
+        'records': records.order_by('id').reverse(),
+        'date': date,
+        'per_num': per_num,
+    }
+    print(f'context = {context}')
+
+    return render(request, 'manager/record_base.html', context)
 
 
 @login_required
@@ -162,6 +189,7 @@ def my_profile_view(request):
     return render(request, 'manager/my_profile.html', context=context)
 
 
+@login_required
 def import_view(request):
     if request.method == 'POST':
         print(request.POST)
