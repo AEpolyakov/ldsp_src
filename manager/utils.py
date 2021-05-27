@@ -1,5 +1,7 @@
 from .models import Person, Department, Record, ExceptionDay
-from .consts import TYPE_CHOICES, STR_MONTH, STR_MONTH2
+from .consts import TYPE_CHOICES, STR_MONTH, STR_MONTH2, \
+    TYPE_NONE, TYPE_ADMIN, TYPE_OTGUL, TYPE_HOSP, TYPE_OTPUSK, TYPE_KOMAND, \
+    ID_NONE, ID_ADMIN, ID_OTGUL, ID_HOSP, ID_OTPUSK, ID_KOMAND
 from datetime import datetime, timedelta, time
 from django.db import models
 import pytz
@@ -35,12 +37,12 @@ class Report:
 
     def get_reason(self):
         report_date = self.get_report_date()
-        if self.report_type == 0:
+        if self.report_type == int(ID_ADMIN):
             return f'Прошу предоставить мне отпуск без сохранения заработной платы {report_date}' \
                    f' по семейным обстоятельствам.'
-        elif self.report_type == 1:
+        elif self.report_type == int(ID_OTGUL):
             return f'Прошу предоставить мне отгул {report_date} за заранее отработанное время'
-        elif self.report_type == 3:
+        elif self.report_type == int(ID_OTPUSK):
             return f'Прошу предоставить очередной отпуск за {self.date_from.year} г. ' \
                    f'{report_date}.'
         else:
@@ -88,9 +90,9 @@ class Report:
         return html
 
     def alert(self):
-        if self.report_type == 2:
+        if self.report_type == int(ID_HOSP):
             return 'Больничный учтён, будьте здоровы!'
-        elif self.report_type == 4:
+        elif self.report_type == int(ID_KOMAND):
             return 'Командировка учтена'
         else:
             return ''
@@ -191,19 +193,19 @@ class TimeData:
         for record in records:
 
             if record.person.name == person.name:
-                if record.type == 'админ.':
+                if record.type == TYPE_ADMIN:
                     if record.date_from.day == this_day.day:
                         delta = self.overlap(record.date_from, record.date_to, self.lunch_start, self.lunch_end)
                         hours -= delta
                     if hours == timedelta(hours=0):
                         return 'A'
-                elif record.type == 'отпуск':
+                elif record.type == TYPE_OTPUSK:
                     if record.date_from <= this_day_utc <= record.date_to:
                         return 'O'
-                elif record.type == 'команд.':
+                elif record.type == TYPE_KOMAND:
                     if record.date_from <= this_day_utc <= record.date_to:
                         return 'K'
-                elif record.type == 'больн.':
+                elif record.type == TYPE_HOSP:
                     if record.date_from <= this_day_utc <= record.date_to:
                         return 'Б'
         return str(hours)
@@ -300,17 +302,17 @@ class Timesheet(TimeData):
         records_hosp = Record.objects.filter(
             models.Q(date_from__year=self.date.year) | models.Q(date_to__year=self.date.year),
             models.Q(date_from__month=self.date.month) | models.Q(date_to__month=self.date.month),
-            type=TYPE_CHOICES[2][1])
+            type=TYPE_HOSP)
 
         records_otp = Record.objects.filter(
             models.Q(date_from__year=self.date.year) | models.Q(date_to__year=self.date.year),
             models.Q(date_from__month=self.date.month) | models.Q(date_to__month=self.date.month),
-            type=TYPE_CHOICES[3][1])
+            type=TYPE_OTPUSK)
 
         records_komm = Record.objects.filter(
             models.Q(date_from__year=self.date.year) | models.Q(date_to__year=self.date.year),
             models.Q(date_from__month=self.date.month) | models.Q(date_to__month=self.date.month),
-            type=TYPE_CHOICES[4][1])
+            type=TYPE_KOMAND)
 
         s = ''
         for record in records_hosp:
