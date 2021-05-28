@@ -2,7 +2,7 @@ from .models import Person, Department, Record, ExceptionDay
 from .consts import TYPE_CHOICES, STR_MONTH, STR_MONTH2, \
     TYPE_NONE, TYPE_ADMIN, TYPE_OTGUL, TYPE_HOSP, TYPE_OTPUSK, TYPE_KOMAND, \
     ID_NONE, ID_ADMIN, ID_OTGUL, ID_HOSP, ID_OTPUSK, ID_KOMAND
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta, time, date
 from django.db import models
 import pytz
 
@@ -103,7 +103,7 @@ class TimeData:
         self.date = self.get_date(request['date'])
         self.department = department
         self.half = True if 'submit-half' in request else False
-        self.persons = Person.objects.filter(department=self.department).order_by('timesheet_pos')
+        self.persons = self.get_persons()
         self.holidays, self.short_days, self.nd_days = self.get_exception_days()
         self.days_half1, self.days_half2 = self.get_work_days()
         self.work_start = timedelta(hours=self.department.work_start.hour, minutes=self.department.work_start.minute)
@@ -112,10 +112,21 @@ class TimeData:
                                         minutes=self.department.work_end_short.minute)
         self.lunch_start = timedelta(hours=self.department.lunch_start.hour, minutes=self.department.lunch_start.minute)
         self.lunch_end = timedelta(hours=self.department.lunch_end.hour, minutes=self.department.lunch_end.minute)
-        print(f'timedata created {self.date} {self.department} {self.persons}')
 
-    def get_date(self, date):
-        date_new = datetime.strptime(date, '%Y-%m-%d')
+    def get_persons(self):
+
+        persons = Person.objects.filter(department=self.department,
+                                        hired_date__month__lte=self.date.month,
+                                        hired_date__year__lte=self.date.year,
+                                        )
+        for person in persons:
+            if person.fired_date is not None and datetime.combine(person.fired_date, time(0, 0)) < self.date:
+                persons = persons.exclude(name=person.name)
+
+        return persons.order_by('timesheet_pos')
+
+    def get_date(self, date_):
+        date_new = datetime.strptime(date_, '%Y-%m-%d')
         return datetime(date_new.year, date_new.month, 1)
 
     def make_html(self):
@@ -179,7 +190,11 @@ class TimeData:
         this_day = datetime(self.date.year, self.date.month, day)
         this_day_utc = pytz.utc.localize(this_day)
 
-        if this_day in self.nd_days:
+        if datetime.combine(person.hired_date, time(0, 0)) > this_day:
+            return '  '
+        elif person.fired_date is not None and this_day > datetime.combine(person.fired_date, time(0, 0)):
+            return '  '
+        elif this_day in self.nd_days:
             return 'НД'
         elif this_day in self.short_days:
             hours = self.work_end_short - self.work_start - (self.lunch_end - self.lunch_start)
