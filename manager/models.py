@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import hashlib
+from django.utils.timezone import now
 
 
 class Department(models.Model):
@@ -23,16 +24,18 @@ class Department(models.Model):
 
 
 class Person(models.Model):
-    name = models.CharField(max_length=64)
-    name2 = models.CharField(max_length=64)
-    job = models.CharField(max_length=64)
-    job2 = models.CharField(max_length=64)
-    personnel_number = models.IntegerField(unique=True)
-    pass_number = models.IntegerField(unique=True)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    is_boss = models.BooleanField(default=False)
+    name = models.CharField(max_length=64, verbose_name="Имя в им. падеже")
+    name2 = models.CharField(max_length=64, verbose_name="Имя в род. падеже")
+    job = models.CharField(max_length=64, verbose_name="Должность в им. падеже")
+    job2 = models.CharField(max_length=64, verbose_name="Должность в им. падеже")
+    personnel_number = models.IntegerField(unique=True, verbose_name="Табельный номер")
+    pass_number = models.IntegerField(unique=True, verbose_name="Номер пропуска")
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name="Подразделение")
+    is_boss = models.BooleanField(default=False, verbose_name="Начальник")
     objects = models.Manager()
-    timesheet_pos = models.IntegerField(default=0)
+    timesheet_pos = models.IntegerField(default=0, verbose_name="Позиция в графике выходов")
+    hired_date = models.DateField(default=now(), verbose_name="Дата поступления на работу")
+    fired_date = models.DateField(blank=True, null=True, verbose_name="Дата увольнения")
 
     def __str__(self):
         return f'{self.name} {self.personnel_number}'
