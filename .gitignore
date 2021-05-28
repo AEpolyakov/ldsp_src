@@ -5,4 +5,5 @@
 *migrations*
 manage.py
 *settings.py
+*.json
 
