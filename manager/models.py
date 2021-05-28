@@ -42,9 +42,9 @@ class Person(models.Model):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE, default=None)
-    logo = models.ImageField(upload_to='avatars', default='no_foto.png')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="сотрудник")
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, default=None, verbose_name="Подразделение")
+    logo = models.ImageField(upload_to='avatars', default='no_foto.png', verbose_name="Фото")
     person = models.ForeignKey(Person, on_delete=models.CASCADE, default=1)
     objects = models.Manager()
 

@@ -9,6 +9,8 @@
 
     <title>{% block title %}{% endblock title %}</title>
 
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
     {% block scripts %}{% endblock scripts %}
 
 </head>
@@ -18,11 +20,4 @@
         {% block content %}{% endblock content %}
     </div>
 </body>
-
-<style>
-    body{
-        margin-top: 70px;
-        background-color: #ddd;
-    }
-</style>
 </html>
