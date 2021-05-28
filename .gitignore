@@ -4,6 +4,5 @@
 *manager/import_from_old.py
 *migrations*
 manage.py
-*settings.py
 *.json
-
+*.env
