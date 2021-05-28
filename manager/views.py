@@ -10,7 +10,7 @@ from .forms import ProfileForm, RecordForm, TimesheetForm, BaseOfRecords
 from xhtml2pdf import pisa
 from .utils import Report, Timesheet, TimeTrack
 from django.contrib.auth.decorators import login_required
-from .consts import TYPE_CHOICES
+from .consts import TYPE_CHOICES, ID_NONE
 from django.template.loader import get_template
 
 
@@ -30,12 +30,15 @@ def record_view(request):
         form = RecordForm(request.POST)
 
         if form.is_valid():
+            print(f'!!!!!!!!!!!!!!!!!!!!!!!choice = {ID_NONE}; type = {request.POST["type"]}')
             person, personnel_number = request.POST['person'].split('; ')
-            Record.objects.create(type=TYPE_CHOICES[int(request.POST['type'])][1],
-                                  person=Person.objects.get(personnel_number=personnel_number),
-                                  date_from=request.POST['date_from'],
-                                  date_to=request.POST['date_to'] if request.POST['date_to'] != '' else request.POST['date_from'],
-                                  created_by=request.user)
+
+            if request.POST['type'] is not ID_NONE:
+                Record.objects.create(type=TYPE_CHOICES[int(request.POST['type'])][1],
+                                      person=Person.objects.get(personnel_number=personnel_number),
+                                      date_from=request.POST['date_from'],
+                                      date_to=request.POST['date_to'] if request.POST['date_to'] != '' else request.POST['date_from'],
+                                      created_by=request.user)
 
             response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = 'filename="report.pdf"'
