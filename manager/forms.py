@@ -23,7 +23,7 @@ class ProfileForm(forms.ModelForm):
 
 
 class TimesheetForm(forms.Form):
-    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    date = forms.CharField(max_length='16')
 
 
 class BaseOfRecords(forms.Form):
