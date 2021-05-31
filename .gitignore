@@ -3,6 +3,5 @@
 *__pycache__*
 *manager/import_from_old.py
 *migrations*
-manage.py
 *.json
 *.env
