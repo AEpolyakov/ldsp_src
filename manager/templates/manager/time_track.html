@@ -13,9 +13,11 @@
     <div class="timesheet-card card">
         <form method="post">
             {% csrf_token %}
-            <h5 class="card-title mt-3 mb-3">Магический квадрат</h5>
-            {{form.as_p}}
-            <button class="btn btn-primary mt-3 w-100" name="submit" type="submit">Сделать!</button>
+            <h4>Магический квадрат</h4>
+            <p style="display: none;">{{form.date}}</p>
+            <p><input type="month" id="timesheet-month"></p>
+            <button name="submit" type="submit">Сделать!</button>
         </form>
     </div>
+
 {% endblock content %}
