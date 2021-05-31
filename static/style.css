@@ -134,7 +134,7 @@ body{
     width: 100%;
 }
 
-/*table, td {
+table, td {
     border: 2px solid black;
     border-collapse: collapse;
     padding: 3px;
@@ -144,15 +144,7 @@ body{
     margin-right: auto;
     width: 900px;
 }
-.disabled{
-    color: #999;
-}
 
-.date{
-   margin-left: auto;
-   margin-right: auto;
-   width: 200px;
-}*/
 
 
 
