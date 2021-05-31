@@ -10,11 +10,11 @@
 {% endblock scripts %}
 
 {% block content %}
-    <div class="form-content card">
+    <div class="timesheet-card card">
         <form method="post">
             {% csrf_token %}
-            <p class="card-title mt-3 mb-3">Магический квадрат</p>
-            <div class="date">{{form.date}}</div>
+            <h5 class="card-title mt-3 mb-3">Магический квадрат</h5>
+            {{form.as_p}}
             <button class="btn btn-primary mt-3 w-100" name="submit" type="submit">Сделать!</button>
         </form>
     </div>

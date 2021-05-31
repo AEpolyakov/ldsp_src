@@ -10,42 +10,20 @@
 {% endblock scripts %}
 
 {% block content %}
-    <div class="my-profile-content card">
+    <div class="my-profile-card card">
         {% if confirm %}
             <div class="alert alert-primary" role="alert">
                 Your profile updated
             </div>
-        {% endif %}
-        <div class="text-center">
-            <img src="{{profile.logo.url}}" alt="my-profile" class="avatar-big">
-        </div>
-        <br>
+        {% endif %}        
+        <img src="{{profile.logo.url}}" alt="my-profile" class="avatar-big">        
         <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{form|crispy}}
+            {% for item in form %}
+                <p>{{item}}</p>
+            {% endfor %}
             <hr>
             <button type="submit" class="btn btn-primary">update</button>
         </form>
     </div>
-    <style>
-<!--        .my-profile-content{-->
-<!--            margin-left: auto;-->
-<!--            margin-right: auto;-->
-<!--            width: 300px;-->
-<!--        }-->
-<!--        .card {-->
-<!--          padding: 10px;-->
-<!--          background-color: #f8f8f8;-->
-<!--          box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);-->
-<!--          transition: 0.3s;-->
-<!--        }-->
-
-<!--        .card:hover {-->
-<!--          box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);-->
-<!--        }-->
-<!--        .btn-primary{-->
-<!--            float: right;-->
-<!--        }-->
-
-    </style>
 {% endblock content %}

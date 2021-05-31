@@ -4,22 +4,19 @@
 {% url 'manager:timesheet' as path_timesheet %}
 {% url 'manager:time_track' as path_time_track %}
 {% url 'manager:record_base' as path_record_base %}
-
 {% url 'manager:my_profile' as path_profile %}
 {% url 'logout' as path_logout %}
 
 <div class="navbar">
-  <ul>
-    <li><a class="navbar-brand" href=""><img src="{% static 'favicon-32x32.png' %}" class="logo-sm"></a></li>
-    <li><a class="nav-link {% if request.path == path_record %}active{% endif %}" href="{{path_record}}">Заявки</a></li>
-    <li><a class="nav-link {% if request.path == path_timesheet %}active{% endif %}" href="{{path_timesheet}}">График</a></li>
-    <li><a class="nav-link {% if request.path == path_time_track %}active{% endif %}" href="{{path_time_track}}">Магический квадрат</a></li>
-    <li><a class="nav-link {% if request.path == path_record_base %}active{% endif %}" href="{{path_record_base}}">База записей</a></li>
+<!--    <a class="navbar-brand" href=""><img src="{% static 'favicon-32x32.png' %}" class="logo-sm"></a>-->
+  <a class="{% if request.path == path_record %}active{% endif %}" href="{{path_record}}">Заявки</a>
+  <a class="{% if request.path == path_timesheet %}active{% endif %}" href="{{path_timesheet}}">График</a>
+  <a class="{% if request.path == path_time_track %}active{% endif %}" href="{{path_time_track}}">Магический квадрат</a>
+  <a class="{% if request.path == path_record_base %}active{% endif %}" href="{{path_record_base}}">База записей</a>
 
-    {% if request.user.is_authenticated %}
-      <li style="float:right"><a class="nav-link" href="{{path_logout}}">Logout</a></li>
-      <li style="float:right"><a class="nav-link" href="{{path_profile}}">{{request.user}}</a></li>
-      <li style="float:right"><img src="{{request.user.profile.logo.url}}" style="max-width: 35px; margin-top: 3px;"></li>
-    {% endif %}
-  </ul>
+  {% if request.user.is_authenticated %}
+    <a class="nav-right {% if request.path == path_logout %}active{% endif %}" href="{{path_logout}}">Logout</a>
+    <a class="nav-right {% if request.path == path_profile %}active{% endif %}" href="{{path_profile}}">{{request.user}}</a>
+    <a class="nav-right a-img {% if request.path == path_profile %}active{% endif %}" href="{{path_profile}}"><img src="{{request.user.profile.logo.url}}"></a>
+  {% endif %}
 </div>
