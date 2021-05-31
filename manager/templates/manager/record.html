@@ -21,24 +21,18 @@
             </select>
             <button id="id_cur_dep" style="display: none;" value="{{ department }}"></button>
             <hr>
-            <div>
-                <select name="person">
-                    {% for person in persons %}
-                        <option>{{person.name}}; {{person.personnel_number}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div>{{form.type}}</div>
+            <select name="person">
+                {% for person in persons %}
+                    <option>{{person.name}}; {{person.personnel_number}}</option>
+                {% endfor %}
+            </select>
+            {{form.type}}
             <hr>
-            <div>
-                {{form.date_from}}<a id="button_date_from_today">&nbsp;today</a><br>
-                {{form.time_from}}
-            </div>
+            {{form.date_from}}
+            {{form.time_from}}
             <hr>
-            <div>
-                {{form.date_to}}<br>
-                {{form.time_to}}
-            </div>
+            {{form.date_to}}
+            {{form.time_to}}
             {% if confirmed %}
                 <div class="" role="alert">{{alert}}</div>
             {% endif %}
