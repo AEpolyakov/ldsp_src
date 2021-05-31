@@ -10,13 +10,14 @@
 {% endblock scripts %}
 
 {% block content %}
-    <div class="form-content card">
+    <div class="timesheet-card card">
         <form method="post">
             {% csrf_token %}
-            <p class="card-title mt-3 mb-3">График для табельной!!!!!</p>
-            <div class="date">{{form.date}}</div>
-            <button class="btn btn-primary mt-3 w-100" name="submit-half" type="submit">за 15 дней</button>
-            <button class="btn btn-primary mt-3 w-100" name="submit-full" type="submit">за весь месяц</button>
+            <h4>График для табельной!!!!!</h4>
+            <p style="display: none;">{{form.date}}</p>
+            <p><input type="month" id="timesheet-month"></p>
+            <button class="" name="submit-half" type="submit">за 15 дней</button>
+            <button class="" name="submit-full" type="submit">за весь месяц</button>
         </form>
     </div>
 
