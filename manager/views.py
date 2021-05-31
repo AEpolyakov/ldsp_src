@@ -79,21 +79,17 @@ def timesheet_view(request):
     if request.method == "POST":
         profile = Profile.objects.get(user=request.user)
         user_department = profile.person.department
-        persons = Person.objects.filter(department=user_department)
         timesheet = Timesheet(request=request.POST, department=user_department)
-
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'filename="timesheet.pdf"'
 
         template = get_template('manager/timesheet_pdf.html')
         context = timesheet.context()
         html = template.render({'pdf': context})
-        # html = timesheet.make_html()
-
-        pisa.CreatePDF(html.encode('UTF-8'), dest=response, encoding='UTF-8')
-
-        # return response
         return HttpResponse(html)
+
+        # response = HttpResponse(content_type='application/pdf')
+        # response['Content-Disposition'] = 'filename="timesheet.pdf"'
+        # pisa.CreatePDF(html.encode('UTF-8'), dest=response, encoding='UTF-8')
+        # return response
     else:
         form = TimesheetForm()
 
