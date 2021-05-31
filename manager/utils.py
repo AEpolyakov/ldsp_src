@@ -126,7 +126,7 @@ class TimeData:
         return persons.order_by('timesheet_pos')
 
     def get_date(self, date_):
-        date_new = datetime.strptime(date_, '%Y-%m-%d')
+        date_new = datetime.strptime(date_, '%Y-%m')
         return datetime(date_new.year, date_new.month, 1)
 
     def make_html(self):
