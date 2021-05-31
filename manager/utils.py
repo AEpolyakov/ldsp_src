@@ -241,43 +241,6 @@ class Timesheet(TimeData):
     def __init__(self, request, department):
         super().__init__(request, department)
 
-    def make_html(self):
-        html = '''
-                <html>
-                    <head>
-                        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-                    </head>
-                    <body>'''
-        html += f'<div class="timesheet-title">График выходов на работу<br>работников ОКБ {self.department.name2}' \
-                f'за {STR_MONTH[self.date.month]} {self.date.year} г.</div>'
-
-        table_header = self.header()
-
-        table_rows = self.rows()
-
-        # html += table(table_header + ''.join(table_rows))
-        html += '''</body>
-                <style>
-                    table, td {
-                        font: 18px Arial;
-                        border: 2px solid black;
-                        border-collapse: collapse;
-                        text-align: center;
-                        padding: 3px;
-                        }
-
-                    @page { size: A5; size: landscape; margin: 1cm; }
-                    @font-face {
-                        font-family: Arial;
-                        src: url("/home/alexey/python_projects/ldsp_env/ldsp_src/media/arial.ttf");
-                        }
-                    body {font-family: Arial; font-size: 16px; }
-                    .report-to{margin-left: 500px;}
-                    .report-title{text-align: center;}
-                </style>    '''
-
-        return html
-
     def rows(self):
         rows = []
         for person in self.persons:
