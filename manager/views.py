@@ -99,15 +99,16 @@ def timesheet_view(request):
 @login_required
 def time_track_view(request):
     if request.method == 'POST':
-        department = Department.objects.get(id=1)
+        profile = Profile.objects.get(user=request.user)
+        department = profile.person.department
+
         time_track = TimeTrack(request.POST, department=department)
         html = time_track.make_html()
-
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'filename="timesheet.pdf"'
-        pisa.CreatePDF(html.encode('UTF-8'), dest=response, encoding='UTF-8')
-
         return HttpResponse(html)
+
+        # response = HttpResponse(content_type='application/pdf')
+        # response['Content-Disposition'] = 'filename="timesheet.pdf"'
+        # pisa.CreatePDF(html.encode('UTF-8'), dest=response, encoding='UTF-8')
         # return response
     else:
         form = TimesheetForm()
