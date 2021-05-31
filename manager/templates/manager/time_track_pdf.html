@@ -1,10 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  <title>PDF {{obj.name}}</title>
 </head>
 <body>
-$END$
+  <div class="timesheet-title">График выходов на работу<br>работников ОКБ {{ pdf.dep_name }}
+    за {{ pdf.month }} {{ pdf.year }} г.</div>
+  <br>
+  <table>
+    {{ pdf.header |safe }}
+    {{ pdf.rows | safe }}
+  </table>
+  <div><br>{{ pdf.subtitle | safe }}<br></div>
+
+
 </body>
+<style>
+    table, td {
+      font: 18px Arial;
+      border: 2px solid black;
+      border-collapse: collapse;
+      text-align: center;
+      padding: 3px;
+      width: auto;
+    }
+    td.w4{
+      width: 40px;
+    }
+    @page { size: A3 landscape; margin: 1cm; }
+    @font-face {
+      font-family: Arial;
+      src: url("/home/alexey/python_projects/ldsp_env/ldsp_src/media/arial.ttf");
+    }
+    body {font-family: Arial; font-size: 16px; }
+    .report-to{margin-left: 500px;}
+    .report-title{text-align: center;}
+</style>
 </html>
