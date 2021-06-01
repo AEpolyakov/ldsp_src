@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from .models import Department, Record, Person, Profile
 from .forms import ProfileForm, RecordForm, TimesheetForm, BaseOfRecords
 from xhtml2pdf import pisa
-from .utils import Report, Timesheet, TimeTrack
+from .time_classes import Report, Timesheet, TimeTrack
 from django.contrib.auth.decorators import login_required
 from .consts import TYPE_CHOICES, ID_NONE
 from django.template.loader import get_template
@@ -63,13 +63,12 @@ def record_view(request):
     else:
         form = RecordForm()
 
-    profile = Profile.objects.get(user=request.user)
-    current_department = profile.person.department
+    profile, department = get_profile_department(request)
     context = {
         'form': form,
-        'department': current_department,
+        'department': department,
         'departments': Department.objects.all(),
-        'persons': Person.objects.filter(department=current_department),
+        'persons': Person.objects.filter(department=department),
     }
     return render(request, 'manager/record.html', context=context)
 
@@ -93,7 +92,13 @@ def timesheet_view(request):
     else:
         form = TimesheetForm()
 
-    return render(request, 'manager/timesheet.html', context={'form': form})
+    profile, department = get_profile_department(request)
+    context = {
+        'form': form,
+        'department': department,
+        'departments': Department.objects.all(),
+    }
+    return render(request, 'manager/timesheet.html', context=context)
 
 
 @login_required
@@ -111,8 +116,11 @@ def time_track_view(request):
         # pisa.CreatePDF(html.encode('UTF-8'), dest=response, encoding='UTF-8')
         # return response
     else:
+        profile, department = get_profile_department(request)
         form = TimesheetForm()
         context = {
+            'department': department,
+            'departments': Department.objects.all(),
             'form': form,
         }
         return render(request, 'manager/time_track.html', context=context)
@@ -158,7 +166,10 @@ def record_base_view(request):
         per_num = ''
         form = BaseOfRecords()
 
+    profile, department = get_profile_department(request)
+
     context = {
+        'department': department,
         'departments': Department.objects.all(),
         'form': form,
         'records': records.order_by('id').reverse(),
@@ -172,19 +183,21 @@ def record_base_view(request):
 
 @login_required
 def my_profile_view(request):
-    profile = Profile.objects.get(user=request.user)
-    form = ProfileForm(request.POST or None, request.FILES or None, instance=profile)
-
-    confirm = False
+    profile, department = get_profile_department(request)
+    form = ProfileForm(instance=profile)
 
     if form.is_valid():
         form.save()
         confirm = True
+    else:
+        confirm = False
 
     context = {
         'profile': profile,
         'form': form,
         'confirm': confirm,
+        'department': department,
+        'departments': Department.objects.all(),
     }
     return render(request, 'manager/my_profile.html', context=context)
 
@@ -228,4 +241,21 @@ def import_view(request):
         return render(request, 'manager/import.html', {})
 
 
+def get_profile_department(request):
+    profile = Profile.objects.get(user=request.user)
+    try:
+        department = request.POST['department']
+    except Exception:
+        department = profile.department
+    return profile, department
 
+
+def dep_change(request, dep_name):
+    print(dep_name)
+    profile = Profile.objects.get(user=request.user)
+    department = Department.objects.get(name=dep_name)
+    profile.department = department
+    profile.save()
+    persons = Person.objects.filter(department=department)
+    response = [f"{person.name}; {person.personnel_number}---" for person in persons]
+    return HttpResponse(response)
