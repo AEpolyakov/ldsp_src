@@ -9,19 +9,12 @@ window.onload = function() {
     const department_selected = document.getElementById('id_dep_sel')
 
 
-    console.log(current_department.value)
-    console.log(department_selected.value)
     department_selected.value = current_department.value
 
 
     time_from.setAttribute('class', 'disabled')
     time_to.setAttribute('class', 'disabled')
     date_to.setAttribute('class', 'disabled')
-
-    date_from.value = today()
-    button_date_from_today.addEventListener('click', (event)=>{
-        date_from.value = today()
-    })
 
     date_to.addEventListener('click', (event)=>{
         if (date_to.classList.contains('disabled')){
