@@ -18,15 +18,6 @@
             <p>{{form.type}}</p>
             <p>{{form.name}}</p>
             <p><input type="number" max="99999" min="00000" name="per_num" value="{{per_num}}" id="id_per_num"></p>
-
-            <p>
-                <select size="{{departments|length}}" name="department-selector">
-                    {% for department in departments %}
-                        <option value="{{department.id}}">{{department.name}}</option>
-                    {% endfor %}
-                </select>
-            </p>
-
             <button type="submit" name="filter">Фильтр</button>
         </div>
 
@@ -49,8 +40,7 @@
                         <td>{{record.person.personnel_number}}</td>
                         <td>{{record.date_from}}</td>
                         <td>{{record.date_to}}</td>
-<!--                        <td class="td-killer"><button class="killer" type="submit" name="kill" value="{{record.id}}">X</button></td>-->
-                        <td class="td-killer">
+                        <td>
                             <button class="killer" name="kill" value="{{record.id}}" onClick='return confirmSubmit()'>
                                 <img class="image-close" src="{% static 'close.png' %}">
                             </button>

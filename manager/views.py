@@ -75,10 +75,9 @@ def record_view(request):
 
 @login_required
 def timesheet_view(request):
+    profile, department = get_profile_department(request)
     if request.method == "POST":
-        profile = Profile.objects.get(user=request.user)
-        user_department = profile.person.department
-        timesheet = Timesheet(request=request.POST, department=user_department)
+        timesheet = Timesheet(request=request.POST, department=department)
 
         template = get_template('manager/timesheet_pdf.html')
         context = timesheet.context()
@@ -92,7 +91,6 @@ def timesheet_view(request):
     else:
         form = TimesheetForm()
 
-    profile, department = get_profile_department(request)
     context = {
         'form': form,
         'department': department,
@@ -103,10 +101,8 @@ def timesheet_view(request):
 
 @login_required
 def time_track_view(request):
+    profile, department = get_profile_department(request)
     if request.method == 'POST':
-        profile = Profile.objects.get(user=request.user)
-        department = profile.person.department
-
         time_track = TimeTrack(request.POST, department=department)
         html = time_track.make_html()
         return HttpResponse(html)
@@ -116,7 +112,6 @@ def time_track_view(request):
         # pisa.CreatePDF(html.encode('UTF-8'), dest=response, encoding='UTF-8')
         # return response
     else:
-        profile, department = get_profile_department(request)
         form = TimesheetForm()
         context = {
             'department': department,
@@ -129,7 +124,8 @@ def time_track_view(request):
 @login_required
 def record_base_view(request):
 
-    records = Record.objects.all()
+    profile, department = get_profile_department(request)
+    records = Record.objects.filter(person__department=department)
 
     if request.method == "POST":
         print(request.POST)
@@ -165,8 +161,6 @@ def record_base_view(request):
         date = ''
         per_num = ''
         form = BaseOfRecords()
-
-    profile, department = get_profile_department(request)
 
     context = {
         'department': department,
@@ -243,19 +237,26 @@ def import_view(request):
 
 def get_profile_department(request):
     profile = Profile.objects.get(user=request.user)
-    try:
-        department = request.POST['department']
-    except Exception:
-        department = profile.department
+    department = profile.department
     return profile, department
 
 
-def dep_change(request, dep_name):
-    print(dep_name)
+def records_dep_change(request, dep_name):
     profile = Profile.objects.get(user=request.user)
     department = Department.objects.get(name=dep_name)
     profile.department = department
     profile.save()
     persons = Person.objects.filter(department=department)
     response = [f"{person.name}; {person.personnel_number}---" for person in persons]
+    return HttpResponse(response)
+
+
+def base_dep_change(request, dep_name):
+    profile = Profile.objects.get(user=request.user)
+    department = Department.objects.get(name=dep_name)
+    profile.department = department
+    profile.save()
+    records = Record.objects.filter(person__department=department).order_by('id')
+    response = [f"{record.id}--{record.type}--{record.person.name}--{record.person.personnel_number}--{record.date_from}--{record.date_to}---" for record in records]
+    response.reverse()
     return HttpResponse(response)
