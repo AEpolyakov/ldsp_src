@@ -4,7 +4,7 @@ from .consts import TYPE_CHOICES
 
 
 class RecordForm(forms.Form):
-    type = forms.ChoiceField(choices=TYPE_CHOICES)
+    type = forms.ChoiceField(choices=TYPE_CHOICES[1:])
     date_from = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     date_to = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
     time_from = forms.TimeField(widget=forms.TimeInput(attrs={'type': 'time'}), required=False)
@@ -29,4 +29,3 @@ class TimesheetForm(forms.Form):
 class BaseOfRecords(forms.Form):
     name = forms.CharField(max_length=64, required=False)
     type = forms.ChoiceField(choices=TYPE_CHOICES, required=False)
-    department = forms.CharField(max_length=64, required=False)
