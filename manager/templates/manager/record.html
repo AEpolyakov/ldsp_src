@@ -14,7 +14,6 @@
     <div class="record-content card">
         <form action="" class="form-record" method="post">
             {% csrf_token %}
-            <button id="id_cur_dep" style="display: none;" value="{{ department }}"></button>
             <select name="person" id="id_person">
                 {% for person in persons %}
                     <option>{{person.name}}; {{person.personnel_number}}</option>
